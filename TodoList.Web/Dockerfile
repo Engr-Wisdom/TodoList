@@ -3,9 +3,9 @@ WORKDIR /src
 
 COPY . .
 
-RUN dotnet restore "TodoList.Web/TodoList.Web.csproj"
+RUN dotnet restore "TodoList.Web.csproj"
 
-RUN dotnet publish "TodoList.Web/TodoList.Web.csproj" \
+RUN dotnet publish "TodoList.Web.csproj" \
     -c Release \
     -o /app/publish \
     --no-restore
