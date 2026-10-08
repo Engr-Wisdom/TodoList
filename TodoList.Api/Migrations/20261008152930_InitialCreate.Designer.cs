@@ -12,8 +12,8 @@ using TodoList.Api.Data;
 namespace TodoList.Api.Migrations
 {
     [DbContext(typeof(TodoContext))]
-    [Migration("20261007220503_AddTaskUser")]
-    partial class AddTaskUser
+    [Migration("20261008152930_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
