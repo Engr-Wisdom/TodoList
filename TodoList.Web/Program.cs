@@ -5,15 +5,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/Login";
-    });
+.AddCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/Login";
+});
 
 builder.Services.AddHttpClient("TodoApi", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5052/");
+    var apiUrl = builder.Configuration["TodoApi:BaseUrl"]
+        ?? "http://localhost:5052/";
+
+    client.BaseAddress = new Uri(apiUrl);
 });
 
 var app = builder.Build();
