@@ -1,0 +1,257 @@
+@{
+    ViewData["Title"] = "My Profile";
+
+    var firstName =
+        User.FindFirst("FirstName")?.Value ?? "";
+
+    var lastName =
+        User.FindFirst("LastName")?.Value ?? "";
+
+    var email =
+        User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "";
+
+    var fullName =
+        $"{firstName} {lastName}".Trim();
+
+    var initials =
+        (!string.IsNullOrWhiteSpace(firstName)
+            ? firstName[0].ToString()
+            : "") +
+        (!string.IsNullOrWhiteSpace(lastName)
+            ? lastName[0].ToString()
+            : "");
+
+    if (string.IsNullOrEmpty(initials))
+    {
+        initials = "U";
+    }
+}
+
+<div class="profile-page">
+
+    <div class="profile-header">
+        <div>
+            <h1>My Profile</h1>
+
+            <p>
+                Manage your Taskora account information.
+            </p>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="profile-success">
+            ✓ @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="profile-error">
+            @foreach (var error in ViewData.ModelState.Values
+                .SelectMany(v => v.Errors))
+            {
+                <div>@error.ErrorMessage</div>
+            }
+        </div>
+    }
+
+    <!-- PROFILE HEADER CARD -->
+
+    <div class="profile-card">
+
+        <div class="profile-avatar">
+            @initials.ToUpper()
+        </div>
+
+        <div class="profile-info">
+
+            <h2>
+                @fullName
+            </h2>
+
+            <p class="profile-email">
+                @email
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- EDIT ACCOUNT -->
+
+    <div class="profile-details-card">
+
+        <h2>Account Information</h2>
+
+        <form method="post"
+              action="/account/profile/update">
+
+            <div class="profile-form-grid">
+
+                <div class="profile-field">
+
+                    <label for="firstName">
+                        First Name
+                    </label>
+
+                    <input type="text"
+                           id="firstName"
+                           name="firstName"
+                           value="@firstName"
+                           required />
+
+                </div>
+
+                <div class="profile-field">
+
+                    <label for="lastName">
+                        Last Name
+                    </label>
+
+                    <input type="text"
+                           id="lastName"
+                           name="lastName"
+                           value="@lastName"
+                           required />
+
+                </div>
+
+            </div>
+
+            <div class="profile-field">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input type="email"
+                       id="email"
+                       name="email"
+                       value="@email"
+                       required />
+
+            </div>
+
+            <button type="submit"
+                    class="primary-button profile-save-button">
+                Save Changes
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- ACCOUNT ACTIONS -->
+
+    <div class="profile-details-card account-actions">
+
+        <h2>Account Actions</h2>
+
+        <div class="account-action">
+
+            <div>
+                <h3>Log out</h3>
+
+                <p>
+                    Sign out of your Taskora account.
+                </p>
+            </div>
+
+            <form method="post"
+                  action="/account/logout">
+
+                <button type="submit"
+                        class="secondary-button">
+                    Log Out
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="account-action danger-action">
+
+            <div>
+                <h3>Delete Account</h3>
+
+                <p>
+                    Permanently delete your Taskora account.
+                    This action cannot be undone.
+                </p>
+            </div>
+
+            <button type="button"
+                    class="danger-button"
+                    onclick="openDeleteModal()">
+                Delete Account
+            </button>
+
+        </div>
+
+        <!-- DELETE ACCOUNT MODAL -->
+
+        <div class="delete-modal-overlay"
+            id="deleteModal">
+
+            <div class="delete-modal">
+
+                <button type="button"
+                        class="delete-modal-close"
+                        onclick="closeDeleteModal()"
+                        aria-label="Close">
+                    ×
+                </button>
+
+                <div class="delete-modal-icon">
+                    !
+                </div>
+
+                <h2>
+                    Delete your account?
+                </h2>
+
+                <p>
+                    This action is permanent and cannot be undone.
+                    Your Taskora account will be permanently deleted.
+                </p>
+
+                <div class="delete-modal-actions">
+
+                    <button type="button"
+                            class="secondary-button"
+                            onclick="closeDeleteModal()">
+                        Cancel
+                    </button>
+
+                    <form method="post"
+                        action="/account/delete">
+
+                        <button type="submit"
+                                class="danger-button">
+                            Delete Account
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/profile.css"
+          asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/profile.js"
+            asp-append-version="true"></script>
+}

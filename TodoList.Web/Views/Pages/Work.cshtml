@@ -1,0 +1,106 @@
+@{
+    ViewData["Title"] = "Work";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/components.css" asp-append-version="true" />
+}
+
+<div class="category-page">
+    <div class="category-page-header">
+        <div>
+            <div class="category-title-row">
+                <span class="large-category-dot category-work"></span>
+                <h1>Work</h1>
+            </div>
+
+            <p class="page-subtitle">
+                Manage your work-related tasks in one place.
+            </p>
+        </div>
+
+        <a href="#" class="primary-button">
+            <span>+</span>
+            Add Task
+        </a>
+    </div>
+
+    <div class="category-overview">
+        <div>
+            <span>Tasks</span>
+            <strong>3</strong>
+        </div>
+
+        <div>
+            <span>Active</span>
+            <strong>2</strong>
+        </div>
+
+        <div>
+            <span>Completed</span>
+            <strong>1</strong>
+        </div>
+    </div>
+
+    <div class="category-task-list">
+
+        <article class="category-task-card">
+            <div class="category-task-check"></div>
+
+            <div class="category-task-content">
+                <h3>Prepare weekly work report</h3>
+                <p>
+                    Review this week's activities and prepare the report.
+                </p>
+
+                <div class="task-meta">
+                    <span class="priority-badge medium">Medium</span>
+                    <span class="task-date">Due Oct 2, 2026</span>
+                </div>
+            </div>
+
+            <div class="task-actions">
+                <button type="button">✎</button>
+                <button type="button">×</button>
+            </div>
+        </article>
+
+        <article class="category-task-card">
+            <div class="category-task-check"></div>
+
+            <div class="category-task-content">
+                <h3>Review project requirements</h3>
+                <p>
+                    Review the requirements for the upcoming project.
+                </p>
+
+                <div class="task-meta">
+                    <span class="priority-badge high">High</span>
+                    <span class="task-date">Due Oct 4, 2026</span>
+                </div>
+            </div>
+
+            <div class="task-actions">
+                <button type="button">✎</button>
+                <button type="button">×</button>
+            </div>
+        </article>
+
+        <article class="category-task-card completed-task">
+            <div class="category-task-check checked">✓</div>
+
+            <div class="category-task-content">
+                <h3>Complete team meeting notes</h3>
+                <p>
+                    Organize and save the notes from the latest team meeting.
+                </p>
+
+                <div class="task-meta">
+                    <span class="priority-badge low">Low</span>
+                    <span class="completed-label">Completed</span>
+                </div>
+            </div>
+        </article>
+
+    </div>
+</div>

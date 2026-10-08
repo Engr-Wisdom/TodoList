@@ -1,8 +1,398 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<TodoList.Web.Controllers.TaskViewModel>
+
+@{
+    ViewData["Title"] = "Dashboard";
+
+    var totalTasks = Model?.Count ?? 0;
+    var completedTasks = Model?.Count(t => t.IsCompleted) ?? 0;
+    var activeTasks = totalTasks - completedTasks;
+
+    var today = DateOnly.FromDateTime(DateTime.Today);
+
+    var overdueTasks = Model?.Count(t =>
+        !t.IsCompleted &&
+        t.DueDate.HasValue &&
+        t.DueDate.Value < today) ?? 0;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/dashboard.css"
+          asp-append-version="true" />
+}
+
+<div class="dashboard">
+
+    <!-- DASHBOARD HEADER -->
+    <section class="dashboard-header">
+
+        <div>
+            <p class="eyebrow">MY WORKSPACE</p>
+
+           @{
+                var firstName = User.Identity?.IsAuthenticated == true
+                    ? User.Identity.Name?.Split('@')[0]
+                    : "Guest";
+            }
+
+            <h1>
+                Good morning, @firstName <span>👋</span>
+            </h1>
+
+            <p class="dashboard-subtitle">
+                Here's what's on your plate today.
+            </p>
+        </div>
+
+        <button
+            class="primary-button"
+            type="button"
+            onclick="window.location.href='/tasks/add'">
+
+            <span>+</span>
+            Add Task
+
+        </button>
+
+    </section>
+
+
+    <!-- TASK STATISTICS -->
+    <section class="stats-grid">
+
+        <!-- TOTAL -->
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    Total Tasks
+                </span>
+
+                <div class="stat-icon purple">
+                    ✓
+                </div>
+
+            </div>
+
+            <div class="stat-value">
+                @totalTasks
+            </div>
+
+            <div class="stat-description">
+                All your tasks
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE -->
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    Active Tasks
+                </span>
+
+                <div class="stat-icon blue">
+                    ◷
+                </div>
+
+            </div>
+
+            <div class="stat-value">
+                @activeTasks
+            </div>
+
+            <div class="stat-description">
+                Still in progress
+            </div>
+
+        </div>
+
+
+        <!-- COMPLETED -->
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    Completed
+                </span>
+
+                <div class="stat-icon green">
+                    ✓
+                </div>
+
+            </div>
+
+            <div class="stat-value">
+                @completedTasks
+            </div>
+
+            <div class="stat-description">
+                Tasks completed
+            </div>
+
+        </div>
+
+
+        <!-- OVERDUE -->
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    Overdue
+                </span>
+
+                <div class="stat-icon red">
+                    !
+                </div>
+
+            </div>
+
+            <div class="stat-value">
+                @overdueTasks
+            </div>
+
+            <div class="stat-description">
+                Need your attention
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- TASK SECTION -->
+    <section class="tasks-section">
+
+        <div class="tasks-header">
+
+            <div>
+
+                <h2>
+                    My Tasks
+                </h2>
+
+                <p>
+                    Stay organized and keep moving forward.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- FILTERS -->
+        <div class="task-filters">
+
+            <button
+                class="filter-button active"
+                type="button">
+
+                All
+
+            </button>
+
+            <button
+                class="filter-button"
+                type="button">
+
+                Work
+
+            </button>
+
+            <button
+                class="filter-button"
+                type="button">
+
+                Home
+
+            </button>
+
+            <button
+                class="filter-button"
+                type="button">
+
+                Church
+
+            </button>
+
+            <button
+                class="filter-button"
+                type="button">
+
+                School
+
+            </button>
+
+        </div>
+
+
+        <!-- REAL TASK LIST -->
+        <div class="task-list">
+
+            @if (Model != null && Model.Any())
+            {
+                foreach (var task in Model)
+                {
+                    var categoryName = task.Category switch
+                    {
+                        1 => "Work",
+                        2 => "Home / Chores",
+                        3 => "Church Calling",
+                        4 => "School",
+                        _ => "Other"
+                    };
+
+                    var categoryClass = task.Category switch
+                    {
+                        1 => "work",
+                        2 => "home",
+                        3 => "church",
+                        4 => "school",
+                        _ => ""
+                    };
+
+                    var priorityName = task.Priority switch
+                    {
+                        10 => "High",
+                        5 => "Medium",
+                        1 => "Low",
+                        _ => "Unknown"
+                    };
+
+                    var priorityClass = task.Priority switch
+                    {
+                        10 => "high",
+                        5 => "medium",
+                        1 => "low",
+                        _ => ""
+                    };
+
+                    var isOverdue =
+                        !task.IsCompleted &&
+                        task.DueDate.HasValue &&
+                        task.DueDate.Value < today;
+
+                    var cardClass = task.IsCompleted
+                        ? "task-card completed"
+                        : isOverdue
+                            ? "task-card overdue"
+                            : "task-card";
+
+
+                    <article class="@cardClass">
+
+                        <!-- CHECKBOX -->
+                        <div class="task-checkbox">
+
+                            <input
+                                type="checkbox"
+                                id="dashboard-task-@task.Id"
+                                @(task.IsCompleted ? "checked" : "")
+                                disabled />
+
+                            <label
+                                for="dashboard-task-@task.Id">
+                            </label>
+
+                        </div>
+
+
+                        <!-- TASK CONTENT -->
+                        <div class="task-content">
+
+                            <div class="task-heading">
+
+                                <h3>
+                                    @task.Title
+                                </h3>
+
+                                <span class="priority-badge @priorityClass">
+                                    @priorityName
+                                </span>
+
+                            </div>
+
+
+                            <p>
+                                @task.Summary
+                            </p>
+
+
+                            <div class="task-meta">
+
+                                <span class="category-badge @categoryClass">
+                                    @categoryName
+                                </span>
+
+
+                                @if (task.IsCompleted)
+                                {
+                                    <span class="completed-label">
+                                        ✓ Completed
+                                    </span>
+                                }
+                                else if (isOverdue)
+                                {
+                                    <span class="overdue-label">
+                                        Overdue ·
+                                        @task.DueDate?.ToString("MMM dd, yyyy")
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="task-date">
+                                        📅
+                                        @(task.DueDate?.ToString("MMM dd, yyyy")
+                                            ?? "No date")
+                                    </span>
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </article>
+                }
+            }
+            else
+            {
+                <!-- EMPTY STATE -->
+
+                <div class="empty-state">
+
+                    <h3>
+                        No tasks yet
+                    </h3>
+
+                    <p>
+                        Create your first task to get started.
+                    </p>
+
+                    <a
+                        asp-controller="Tasks"
+                        asp-action="Add"
+                        class="primary-button">
+
+                        <span>+</span>
+                        Create Your First Task
+
+                    </a>
+
+                </div>
+            }
+
+        </div>
+
+    </section>
+
 </div>
+
+@section Scripts {
+    <script src="~/js/dashboard.js" asp-append-version="true"></script>
+}

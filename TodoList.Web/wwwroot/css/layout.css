@@ -1,0 +1,451 @@
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    display: flex;
+    flex-direction: column;
+    padding: 28px 18px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+}
+
+.sidebar-brand,
+.mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--text);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.brand-mark {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--primary);
+    color: white;
+    font-weight: 700;
+}
+
+.sidebar-nav {
+    margin-top: 40px;
+}
+
+.nav-section {
+    margin-bottom: 32px;
+}
+
+.nav-section-title {
+    display: block;
+    margin: 0 12px 10px;
+    color: #9ca3af;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    margin-bottom: 4px;
+    padding: 0 12px;
+    border-radius: 9px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.sidebar-link:hover {
+    background: #f8fafc;
+    color: var(--text);
+}
+
+.sidebar-link.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.sidebar-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.category-dot {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+
+.category-work {
+    background: #6366f1;
+}
+
+.category-home {
+    background: #f59e0b;
+}
+
+.category-church {
+    background: #ec4899;
+}
+
+.category-school {
+    background: #10b981;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+}
+
+.main-shell {
+    width: calc(100% - var(--sidebar-width));
+    margin-left: var(--sidebar-width);
+}
+
+.topbar {
+    display: flex;
+    height: 76px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 40px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.mobile-brand {
+    display: none;
+}
+
+.topbar-search {
+    display: flex;
+    width: min(420px, 100%);
+    height: 40px;
+    align-items: center;
+    gap: 9px;
+    padding: 0 12px;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    color: var(--muted);
+}
+
+.search-icon {
+    font-size: 20px;
+}
+
+.topbar-search input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text);
+    font-size: 13px;
+}
+
+.search-shortcut {
+    padding: 3px 7px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: white;
+    color: #9ca3af;
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.icon-button {
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 18px;
+}
+
+.icon-button:hover {
+    background: #f8fafc;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.avatar {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border-radius: 50%;
+    background: #e0e7ff;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.user-role {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.main-content {
+    padding: 38px 40px 60px;
+}
+
+@media (max-width: 1000px) {
+    .topbar {
+        padding: 0 24px;
+    }
+
+    .main-content {
+        padding: 30px 24px 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --sidebar-width: 0px;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .main-shell {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .mobile-brand {
+        display: flex;
+    }
+
+    .topbar {
+        height: 68px;
+        padding: 0 18px;
+    }
+
+    .topbar-search {
+        display: none;
+    }
+
+    .user-info {
+        display: none;
+    }
+
+    .main-content {
+        padding: 28px 18px 45px;
+    }
+}
+
+/* =========================================
+GLOBAL TASKORA DARK MODE
+========================================= */
+
+html.dark-theme body {
+background: #111827;
+color: #f9fafb;
+}
+
+/* Main application area */
+html.dark-theme .main-content,
+html.dark-theme main {
+background: #111827;
+color: #f9fafb;
+}
+
+/* Sidebar */
+html.dark-theme .sidebar {
+background: #0f172a;
+border-color: #1e293b;
+}
+
+html.dark-theme .sidebar-link {
+color: #cbd5e1;
+}
+
+html.dark-theme .sidebar-link:hover {
+background: #1e293b;
+color: #ffffff;
+}
+
+html.dark-theme .sidebar-link.active {
+background: #312e81;
+color: #ffffff;
+}
+
+/* Header */
+html.dark-theme .top-header,
+html.dark-theme .header,
+html.dark-theme header {
+background: #111827;
+border-color: #374151;
+color: #f9fafb;
+}
+
+/* Header text */
+html.dark-theme .top-header h1,
+html.dark-theme .top-header h2,
+html.dark-theme .top-header p,
+html.dark-theme .header h1,
+html.dark-theme .header h2,
+html.dark-theme .header p {
+color: #f9fafb;
+}
+
+/* Search / input fields */
+html.dark-theme input,
+html.dark-theme textarea,
+html.dark-theme select {
+background: #1f2937;
+border-color: #4b5563;
+color: #f9fafb;
+}
+
+html.dark-theme input::placeholder,
+html.dark-theme textarea::placeholder {
+color: #9ca3af;
+}
+
+/* Cards */
+html.dark-theme .card,
+html.dark-theme .task-card,
+html.dark-theme .full-task-card,
+html.dark-theme .stat-card,
+html.dark-theme .dashboard-card {
+background: #1f2937;
+border-color: #374151;
+color: #f9fafb;
+}
+
+/* Headings and text */
+html.dark-theme h1,
+html.dark-theme h2,
+html.dark-theme h3,
+html.dark-theme h4 {
+color: #f9fafb;
+}
+
+html.dark-theme p,
+html.dark-theme span {
+color: inherit;
+}
+
+/* Secondary text */
+html.dark-theme .subtitle,
+html.dark-theme .description,
+html.dark-theme .muted,
+html.dark-theme .text-muted {
+color: #9ca3af;
+}
+
+/* Buttons */
+html.dark-theme .secondary-button {
+background: #374151;
+color: #f9fafb;
+border-color: #4b5563;
+}
+
+html.dark-theme .secondary-button:hover {
+background: #4b5563;
+}
+
+/* Tables */
+html.dark-theme table {
+background: #1f2937;
+color: #f9fafb;
+}
+
+html.dark-theme th {
+background: #111827;
+color: #f9fafb;
+}
+
+html.dark-theme td {
+border-color: #374151;
+}
+
+/* Links */
+html.dark-theme a {
+color: #a5b4fc;
+}
+
+html.dark-theme a:hover {
+color: #c7d2fe;
+}
+
+/* =========================================
+   DARK MODE - TOPBAR SEARCH
+   ========================================= */
+
+html.dark-theme .topbar-search {
+    background: #1f2937;
+    border-color: #374151;
+    color: #f9fafb;
+}
+
+/* Search icon */
+html.dark-theme .topbar-search .search-icon {
+    color: #9ca3af;
+}
+
+/* Search input */
+html.dark-theme .topbar-search input {
+    background: transparent;
+    border: none;
+    color: #f9fafb;
+}
+
+/* Placeholder */
+html.dark-theme .topbar-search input::placeholder {
+    color: #9ca3af;
+}
+
+/* Keyboard shortcut */
+html.dark-theme .topbar-search .search-shortcut {
+    background: #374151;
+    color: #d1d5db;
+}
+
+/* Focus effect */
+html.dark-theme .topbar-search:focus-within {
+    background: #1f2937;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}

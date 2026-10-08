@@ -1,0 +1,431 @@
+@model List<TodoList.Web.Controllers.TaskViewModel>
+
+@{
+    ViewData["Title"] = "My Tasks";
+
+    var totalTasks = Model?.Count ?? 0;
+    var completedTasks = Model?.Count(t => t.IsCompleted) ?? 0;
+    var activeTasks = totalTasks - completedTasks;
+
+    var today = DateOnly.FromDateTime(DateTime.Today);
+
+    var overdueTasks = Model?.Count(t =>
+        !t.IsCompleted &&
+        t.DueDate.HasValue &&
+        t.DueDate.Value < today) ?? 0;
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/my-tasks.css"
+          asp-append-version="true" />
+}
+
+<div class="tasks-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div>
+            <p class="eyebrow">TASK MANAGEMENT</p>
+
+            <h1>My Tasks</h1>
+
+            <p class="page-subtitle">
+                View and organize everything you need to get done.
+            </p>
+        </div>
+
+        <a asp-controller="Tasks"
+           asp-action="Add"
+           class="primary-button">
+
+            <span>+</span>
+            Add Task
+
+        </a>
+
+    </div>
+
+
+    <!-- TASK SUMMARY -->
+    <div class="task-summary-grid">
+
+        <div class="task-summary-card">
+
+            <span class="summary-label">
+                All Tasks
+            </span>
+
+            <strong>
+                @totalTasks
+            </strong>
+
+        </div>
+
+
+        <div class="task-summary-card">
+
+            <span class="summary-label">
+                Active
+            </span>
+
+            <strong>
+                @activeTasks
+            </strong>
+
+        </div>
+
+
+        <div class="task-summary-card">
+
+            <span class="summary-label">
+                Completed
+            </span>
+
+            <strong>
+                @completedTasks
+            </strong>
+
+        </div>
+
+
+        <div class="task-summary-card danger">
+
+            <span class="summary-label">
+                Overdue
+            </span>
+
+            <strong>
+                @overdueTasks
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- TASK TOOLBAR -->
+    <div class="tasks-toolbar">
+
+        <div class="task-filter-group">
+
+            <button class="task-filter active"
+                    type="button">
+                All
+            </button>
+
+            <button class="task-filter"
+                    type="button">
+                Active
+            </button>
+
+            <button class="task-filter"
+                    type="button">
+                Completed
+            </button>
+
+            <button class="task-filter"
+                    type="button">
+                Overdue
+            </button>
+
+        </div>
+
+
+        <select class="task-sort">
+
+            <option>
+                Sort by Due Date
+            </option>
+
+            <option>
+                Sort by Priority
+            </option>
+
+            <option>
+                Sort by Category
+            </option>
+
+            <option>
+                Recently Added
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- TASK LIST -->
+    <div class="full-task-list">
+
+        @if (Model != null && Model.Any())
+        {
+            foreach (var task in Model)
+            {
+                var categoryName = task.Category switch
+                {
+                    1 => "Work",
+                    2 => "Home / Chores",
+                    3 => "Church Calling",
+                    4 => "School",
+                    _ => "Other"
+                };
+
+                var categoryClass = task.Category switch
+                {
+                    1 => "work",
+                    2 => "home",
+                    3 => "church",
+                    4 => "school",
+                    _ => ""
+                };
+
+                var priorityName = task.Priority switch
+                {
+                    10 => "High",
+                    5 => "Medium",
+                    1 => "Low",
+                    _ => "Unknown"
+                };
+
+                var priorityClass = task.Priority switch
+                {
+                    10 => "high",
+                    5 => "medium",
+                    1 => "low",
+                    _ => ""
+                };
+
+                var isOverdue =
+                    !task.IsCompleted &&
+                    task.DueDate.HasValue &&
+                    task.DueDate.Value < today;
+
+                var cardClass = task.IsCompleted
+                    ? "full-task-card completed-task"
+                    : isOverdue
+                        ? "full-task-card overdue-task"
+                        : "full-task-card";
+
+
+                <article class="@cardClass">
+
+                    <!-- CHECKBOX -->
+                    <div class="full-task-check @(task.IsCompleted ? "checked" : "")">
+
+                        @if (task.IsCompleted)
+                        {
+                            <span>✓</span>
+                        }
+                        else
+                        {
+                            <span></span>
+                        }
+
+                    </div>
+
+
+                    <!-- TASK CONTENT -->
+                    <div class="full-task-content">
+
+                        <div class="full-task-top">
+
+                            <h3>
+                                @task.Title
+                            </h3>
+
+                            <span class="priority-badge @priorityClass">
+                                @priorityName
+                            </span>
+
+                        </div>
+
+
+                        <p>
+                            @task.Summary
+                        </p>
+
+
+                        <div class="full-task-meta">
+
+                            <span class="category-badge @categoryClass">
+                                @categoryName
+                            </span>
+
+
+                            @if (task.IsCompleted)
+                            {
+                                <span class="completed-label">
+                                    Completed
+                                </span>
+                            }
+                            else if (isOverdue)
+                            {
+                                <span class="overdue-label">
+                                    Overdue ·
+                                    @task.DueDate?.ToString("MMM dd, yyyy")
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="task-date">
+                                    Due
+                                    @(task.DueDate?.ToString("MMM dd, yyyy")
+                                        ?? "No date")
+                                </span>
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TASK ACTIONS -->
+                    <div class="full-task-actions">
+
+                        <!-- EDIT -->
+                        <a
+                            asp-controller="Tasks"
+                            asp-action="Edit"
+                            asp-route-id="@task.Id"
+                            class="task-action-button"
+                            aria-label="Edit task"
+                            title="Edit task">
+
+                            ✎
+
+                        </a>
+
+
+                        <!-- DELETE -->
+                        <button
+                            type="button"
+                            class="delete-task-button"
+                            aria-label="Delete task"
+                            title="Delete task"
+                            data-task-id="@task.Id"
+                            data-task-title="@task.Title">
+
+                            ×
+
+                        </button>
+
+                    </div>
+
+                </article>
+            }
+        }
+        else
+        {
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+                <h3>
+                    No tasks yet
+                </h3>
+
+                <p>
+                    Create your first task to get started.
+                </p>
+
+                <a
+                    asp-controller="Tasks"
+                    asp-action="Add"
+                    class="primary-button">
+
+                    <span>+</span>
+                    Create Your First Task
+
+                </a>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+<!-- ========================================= -->
+<!-- DELETE CONFIRMATION MODAL -->
+<!-- ========================================= -->
+
+<div id="deleteTaskModal"
+     class="delete-modal"
+     aria-hidden="true">
+
+    <div class="delete-modal-overlay"></div>
+
+    <div class="delete-modal-content"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="deleteModalTitle">
+
+        <button
+            type="button"
+            class="delete-modal-close"
+            id="cancelDeleteTop"
+            aria-label="Close">
+
+            ×
+
+        </button>
+
+
+        <div class="delete-modal-icon">
+            !
+        </div>
+
+
+        <h2 id="deleteModalTitle">
+            Delete Task?
+        </h2>
+
+
+        <p>
+            Are you sure you want to delete
+            <strong id="deleteTaskTitle"></strong>?
+        </p>
+
+        <p class="delete-modal-warning">
+            This action cannot be undone.
+        </p>
+
+
+        <!-- DELETE FORM -->
+        <form id="deleteTaskForm"
+              method="post">
+
+            <div class="delete-modal-actions">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    id="cancelDelete">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="delete-confirm-button">
+
+                    Delete Task
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/my-tasks.js" asp-append-version="true"></script>
+}

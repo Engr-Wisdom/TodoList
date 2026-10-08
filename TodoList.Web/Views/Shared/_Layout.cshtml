@@ -3,48 +3,253 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TodoList.Web</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <title>@ViewData["Title"] - Taskora</title>
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/TodoList.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", required: false)
 </head>
+
+<script src="~/js/theme.js" asp-append-version="true"></script>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TodoList.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+    @{
+        var currentController =
+            ViewContext.RouteData.Values["controller"]?.ToString();
+
+        var currentAction =
+            ViewContext.RouteData.Values["action"]?.ToString();
+    }
+
+    <div class="app-shell">
+
+        <aside class="sidebar">
+
+            <div class="sidebar-brand">
+                <div class="brand-mark">T</div>
+                <span>Taskora</span>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+            <nav class="sidebar-nav">
+
+                <!-- ================================
+                     WORKSPACE
+                     ================================ -->
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Workspace</span>
+
+                    <!-- Dashboard -->
+                    <a class="sidebar-link @(currentController == "Home" ? "active" : "")"
+                       asp-controller="Home"
+                       asp-action="Index">
+
+                        <span class="sidebar-icon">⌂</span>
+                        <span>Dashboard</span>
+
+                    </a>
+
+                    <!-- My Tasks -->
+                    <a class="sidebar-link @(currentController == "Tasks" ? "active" : "")"
+                       asp-controller="Tasks"
+                       asp-action="Index">
+
+                        <span class="sidebar-icon">✓</span>
+                        <span>My Tasks</span>
+
+                    </a>
+                </div>
+
+
+                <!-- ================================
+                     CATEGORIES
+                     ================================ -->
+
+                <div class="nav-section">
+
+                    <span class="nav-section-title">
+                        Categories
+                    </span>
+
+                    <a class="sidebar-link"
+                       href="#">
+                        <span class="category-dot category-work"></span>
+                        <span>Work</span>
+                    </a>
+
+                    <a class="sidebar-link"
+                       href="#">
+                        <span class="category-dot category-home"></span>
+                        <span>Home / Chores</span>
+                    </a>
+
+                    <a class="sidebar-link"
+                       href="#">
+                        <span class="category-dot category-church"></span>
+                        <span>Church Calling</span>
+                    </a>
+
+                    <a class="sidebar-link"
+                       href="#">
+                        <span class="category-dot category-school"></span>
+                        <span>School</span>
+                    </a>
+
+                </div>
+
+            </nav>
+
+
+            <!-- ================================
+                 SIDEBAR BOTTOM
+                 ================================ -->
+
+            <div class="sidebar-bottom">
+
+                <a class="sidebar-link
+                          @(currentController == "Settings" ? "active" : "")"
+                   asp-controller="Settings"
+                   asp-action="Index">
+
+                    <span class="sidebar-icon">⚙</span>
+                    <span>Settings</span>
+
+                </a>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ================================
+             MAIN AREA
+             ================================ -->
+
+        <div class="main-shell">
+
+            <!-- TOP BAR -->
+
+            <header class="topbar">
+
+                <div class="mobile-brand">
+
+                    <div class="brand-mark">T</div>
+
+                    <span>Taskora</span>
+
+                </div>
+
+
+                <!-- SEARCH -->
+
+                <div class="topbar-search">
+
+                    <span class="search-icon">
+                        ⌕
+                    </span>
+
+                    <input
+                        type="search"
+                        id="taskSearch"
+                        placeholder="Search tasks..." />
+
+                    <span class="search-shortcut">
+                        ⌘ K
+                    </span>
+
+                </div>
+
+
+                <!-- USER AREA -->
+
+                <div class="topbar-actions">
+
+                    <button
+                        class="icon-button"
+                        type="button"
+                        aria-label="Notifications">
+
+                        ♧
+
+                    </button>
+
+
+                    <a asp-controller="Account"
+                    asp-action="Profile"
+                    class="user-profile">
+
+                        @{
+                            var firstName = User.FindFirst("FirstName")?.Value ?? "";
+                            var lastName = User.FindFirst("LastName")?.Value ?? "";
+
+                            var displayName = $"{firstName} {lastName}".Trim();
+
+                            if (string.IsNullOrEmpty(displayName))
+                            {
+                                displayName = "Guest";
+                            }
+
+                            var initials =
+                                (!string.IsNullOrEmpty(firstName) ? firstName[0].ToString() : "") +
+                                (!string.IsNullOrEmpty(lastName) ? lastName[0].ToString() : "");
+
+                            if (string.IsNullOrEmpty(initials))
+                            {
+                                initials = "G";
+                            }
+                        }
+
+                        <div class="avatar">
+                            @initials.ToUpper()
+                        </div>
+
+                        <div class="user-info">
+
+                            <span class="user-name">
+                                @displayName
+                            </span>
+
+                            <span class="user-role">
+                                @(User.Identity?.IsAuthenticated == true
+                                    ? "Personal workspace"
+                                    : "Guest")
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+            </header>
+
+
+            <!-- ================================
+                 PAGE CONTENT
+                 ================================ -->
+
+            <main class="main-content">
+
+                @RenderBody()
+
+            </main>
+
+        </div>
+
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - TodoList.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- GLOBAL JAVASCRIPT -->
+
+    <script src="~/js/site.js"
+            asp-append-version="true">
+    </script>
+
+    @await RenderSectionAsync(
+        "Scripts",
+        required: false)
+
 </body>
 </html>

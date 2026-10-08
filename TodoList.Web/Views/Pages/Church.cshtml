@@ -1,0 +1,106 @@
+@{
+    ViewData["Title"] = "Church Calling";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/components.css" asp-append-version="true" />
+}
+
+<div class="category-page">
+    <div class="category-page-header">
+        <div>
+            <div class="category-title-row">
+                <span class="large-category-dot category-church"></span>
+                <h1>Church Calling</h1>
+            </div>
+
+            <p class="page-subtitle">
+                Organize tasks related to your church calling and responsibilities.
+            </p>
+        </div>
+
+        <a href="#" class="primary-button">
+            <span>+</span>
+            Add Task
+        </a>
+    </div>
+
+    <div class="category-overview">
+        <div>
+            <span>Tasks</span>
+            <strong>3</strong>
+        </div>
+
+        <div>
+            <span>Active</span>
+            <strong>2</strong>
+        </div>
+
+        <div>
+            <span>Completed</span>
+            <strong>1</strong>
+        </div>
+    </div>
+
+    <div class="category-task-list">
+
+        <article class="category-task-card">
+            <div class="category-task-check"></div>
+
+            <div class="category-task-content">
+                <h3>Prepare Sunday lesson</h3>
+                <p>
+                    Prepare the lesson materials and review the discussion topics.
+                </p>
+
+                <div class="task-meta">
+                    <span class="priority-badge high">High</span>
+                    <span class="task-date">Due Sep 27, 2026</span>
+                </div>
+            </div>
+
+            <div class="task-actions">
+                <button type="button">✎</button>
+                <button type="button">×</button>
+            </div>
+        </article>
+
+        <article class="category-task-card">
+            <div class="category-task-check"></div>
+
+            <div class="category-task-content">
+                <h3>Contact class members</h3>
+                <p>
+                    Reach out to class members before the upcoming meeting.
+                </p>
+
+                <div class="task-meta">
+                    <span class="priority-badge medium">Medium</span>
+                    <span class="task-date">Due Sep 28, 2026</span>
+                </div>
+            </div>
+
+            <div class="task-actions">
+                <button type="button">✎</button>
+                <button type="button">×</button>
+            </div>
+        </article>
+
+        <article class="category-task-card completed-task">
+            <div class="category-task-check checked">✓</div>
+
+            <div class="category-task-content">
+                <h3>Review previous lesson</h3>
+                <p>
+                    Review notes from the previous lesson.
+                </p>
+
+                <div class="task-meta">
+                    <span class="priority-badge low">Low</span>
+                    <span class="completed-label">Completed</span>
+                </div>
+            </div>
+        </article>
+
+    </div>
+</div>

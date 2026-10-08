@@ -1,0 +1,236 @@
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="brand-mark">T</div>
+
+            <h1>Create your account</h1>
+
+            <p>
+                Create your Taskora account and start organizing your tasks.
+            </p>
+        </div>
+
+        <form asp-controller="Account"
+              asp-action="Register"
+              method="post"
+              id="registerForm"
+              novalidate>
+
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+
+                <input type="text"
+                       id="firstName"
+                       name="firstName"
+                       placeholder="Enter your first name"
+                       required />
+
+                <span class="client-error"
+                      id="firstNameError"></span>
+
+                @if (ViewData.ModelState["firstName"]?.Errors.Count > 0)
+                {
+                    <span class="field-validation-error">
+                        @ViewData.ModelState["firstName"]?.Errors[0].ErrorMessage
+                    </span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+
+                <input type="text"
+                       id="lastName"
+                       name="lastName"
+                       placeholder="Enter your last name"
+                       required />
+
+                <span class="client-error"
+                      id="lastNameError"></span>
+
+                @if (ViewData.ModelState["lastName"]?.Errors.Count > 0)
+                {
+                    <span class="field-validation-error">
+                        @ViewData.ModelState["lastName"]?.Errors[0].ErrorMessage
+                    </span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+
+                <input type="email"
+                       id="email"
+                       name="email"
+                       placeholder="Enter your email"
+                       required />
+
+                <span class="client-error"
+                      id="emailError"></span>
+
+                @if (ViewData.ModelState["email"]?.Errors.Count > 0)
+                {
+                    <span class="field-validation-error">
+                        @ViewData.ModelState["email"]?.Errors[0].ErrorMessage
+                    </span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+
+                <input type="password"
+                       id="password"
+                       name="password"
+                       placeholder="Create a password"
+                       required />
+
+                <span class="client-error"
+                      id="passwordError"></span>
+
+                @if (ViewData.ModelState["password"]?.Errors.Count > 0)
+                {
+                    <span class="field-validation-error">
+                        @ViewData.ModelState["password"]?.Errors[0].ErrorMessage
+                    </span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+
+                <input type="password"
+                       id="confirmPassword"
+                       name="confirmPassword"
+                       placeholder="Confirm your password"
+                       required />
+
+                <span class="client-error"
+                      id="confirmPasswordError"></span>
+
+                @if (ViewData.ModelState["confirmPassword"]?.Errors.Count > 0)
+                {
+                    <span class="field-validation-error">
+                        @ViewData.ModelState["confirmPassword"]?.Errors[0].ErrorMessage
+                    </span>
+                }
+            </div>
+
+            <button type="submit"
+                    class="primary-button auth-button">
+                Create Account
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <span>Already have an account?</span>
+
+            <a asp-controller="Account"
+               asp-action="Login">
+                Log in
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/auth.css"
+          asp-append-version="true" />
+}
+
+@section Scripts {
+    <script>
+        const form = document.getElementById("registerForm");
+
+        form.addEventListener("submit", function (event) {
+
+            let valid = true;
+
+            document.querySelectorAll(".client-error")
+                .forEach(error => error.textContent = "");
+
+            const firstName =
+                document.getElementById("firstName").value.trim();
+
+            const lastName =
+                document.getElementById("lastName").value.trim();
+
+            const email =
+                document.getElementById("email").value.trim();
+
+            const password =
+                document.getElementById("password").value;
+
+            const confirmPassword =
+                document.getElementById("confirmPassword").value;
+
+            // First name validation
+            if (!firstName) {
+                document.getElementById("firstNameError").textContent =
+                    "First name is required.";
+
+                valid = false;
+            }
+
+            // Last name validation
+            if (!lastName) {
+                document.getElementById("lastNameError").textContent =
+                    "Last name is required.";
+
+                valid = false;
+            }
+
+            // Email validation
+            if (!email) {
+                document.getElementById("emailError").textContent =
+                    "Email is required.";
+
+                valid = false;
+            }
+            else if (!email.includes("@@") || !email.includes(".")) {
+                document.getElementById("emailError").textContent =
+                    "Please enter a valid email address.";
+
+                valid = false;
+            }
+
+            // Password validation
+            if (!password) {
+                document.getElementById("passwordError").textContent =
+                    "Password is required.";
+
+                valid = false;
+            }
+            else if (password.length < 6) {
+                document.getElementById("passwordError").textContent =
+                    "Password must be at least 6 characters.";
+
+                valid = false;
+            }
+
+            // Confirm password validation
+            if (!confirmPassword) {
+                document.getElementById("confirmPasswordError").textContent =
+                    "Please confirm your password.";
+
+                valid = false;
+            }
+            else if (password !== confirmPassword) {
+                document.getElementById("confirmPasswordError").textContent =
+                    "Passwords do not match.";
+
+                valid = false;
+            }
+
+            // Stop submission if validation fails
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
+    </script>
+}

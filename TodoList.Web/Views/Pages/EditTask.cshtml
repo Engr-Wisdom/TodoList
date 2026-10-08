@@ -1,0 +1,264 @@
+@model TodoList.Web.Controllers.TaskViewModel
+
+@{
+    ViewData["Title"] = "Edit Task";
+
+    var categoryName = Model.Category switch
+    {
+        1 => "Work",
+        2 => "Home / Chores",
+        3 => "Church Calling",
+        4 => "School",
+        _ => ""
+    };
+
+    var priorityValue = Model.Priority.ToString();
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/add-task.css"
+          asp-append-version="true" />
+}
+
+<div class="task-page">
+
+    <!-- PAGE HEADER -->
+    <div class="task-page-header">
+
+        <div>
+            <p class="eyebrow">TASK MANAGEMENT</p>
+
+            <h1>Edit Task</h1>
+
+            <p class="task-page-subtitle">
+                Update the information for your task.
+            </p>
+        </div>
+
+        <a href="/tasks" class="secondary-button">
+            Cancel
+        </a>
+
+    </div>
+
+
+    <!-- FORM CARD -->
+    <div class="task-form-card">
+
+        <div class="task-form-header">
+
+            <div class="form-icon">
+                ✎
+            </div>
+
+            <div>
+                <h2>Task Details</h2>
+
+                <p>
+                    Update the information for your task.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form method="post"
+              action="/tasks/edit/@Model.Id">
+
+
+            <!-- TITLE -->
+            <div class="form-group">
+
+                <label for="title">
+                    Task Title
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    value="@Model.Title"
+                    placeholder="e.g. Complete CSE 325 project"
+                    autocomplete="off"
+                    required />
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="5"
+                    placeholder="Add details about this task..."
+                    required>@Model.Summary</textarea>
+
+                <span class="form-help">
+                    Update the details of this task.
+                </span>
+
+            </div>
+
+
+            <!-- CATEGORY AND PRIORITY -->
+            <div class="form-row">
+
+
+                <!-- CATEGORY -->
+                <div class="form-group">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select
+                        id="category"
+                        name="category"
+                        required>
+
+                        <option value="">
+                            Select category
+                        </option>
+
+                        <option value="1"
+                            selected="@(Model.Category == 1)">
+                            Work
+                        </option>
+
+                        <option value="2"
+                            selected="@(Model.Category == 2)">
+                            Home / Chores
+                        </option>
+
+                        <option value="3"
+                            selected="@(Model.Category == 3)">
+                            Church Calling
+                        </option>
+
+                        <option value="4"
+                            selected="@(Model.Category == 4)">
+                            School
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- PRIORITY -->
+                <div class="form-group">
+
+                    <label for="priority">
+                        Priority
+                    </label>
+
+                    <select
+                        id="priority"
+                        name="priority"
+                        required>
+
+                        <option value="">
+                            Select priority
+                        </option>
+
+                        <option value="10"
+                            selected="@(Model.Priority == 10)">
+                            High
+                        </option>
+
+                        <option value="5"
+                            selected="@(Model.Priority == 5)">
+                            Medium
+                        </option>
+
+                        <option value="1"
+                            selected="@(Model.Priority == 1)">
+                            Low
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- DUE DATE -->
+            <div class="form-group">
+
+                <label for="dueDate">
+                    Due Date
+                </label>
+
+                <input
+                    type="date"
+                    id="dueDate"
+                    name="dueDate"
+                    value="@Model.DueDate?.ToString("yyyy-MM-dd")"
+                    required />
+
+            </div>
+
+
+            <!-- COMPLETED -->
+            <div class="form-group">
+
+                <label for="isCompleted">
+                    Task Status
+                </label>
+
+                <label class="toggle">
+
+                    <input
+                        type="checkbox"
+                        id="isCompleted"
+                        name="isCompleted"
+                        value="true"
+                        @(Model.IsCompleted ? "checked" : "") />
+
+                    <span class="toggle-slider"></span>
+
+                </label>
+
+                <span class="form-help">
+                    Mark this task as completed.
+                </span>
+
+            </div>
+
+
+            <!-- FORM FOOTER -->
+            <div class="task-form-footer">
+
+                <a href="/tasks"
+                   class="secondary-button">
+
+                    Cancel
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="primary-button">
+
+                    <span>✓</span>
+
+                    Save Changes
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

@@ -1,6 +1,44 @@
-@TodoList.Api_HostAddress = http://localhost:5052
+@TodoListApi_HostAddress = http://localhost:5052
 
-GET {{TodoList.Api_HostAddress}}/weatherforecast/
+### Get all tasks
+GET {{TodoListApi_HostAddress}}/api/tasks
 Accept: application/json
 
-###
+### Get task by id
+GET {{TodoListApi_HostAddress}}/api/tasks/1
+Accept: application/json
+
+### Create task
+POST {{TodoListApi_HostAddress}}/api/tasks
+Content-Type: application/json
+
+{
+  "title": "Finish controller",
+  "summary": "Complete CRUD endpoints for the task API.",
+  "category": 4,
+  "dueDate": "2026-10-05",
+  "priority": 8,
+  "isCompleted": false
+}
+
+### Update task
+PUT {{TodoListApi_HostAddress}}/api/tasks/1
+Content-Type: application/json
+
+### Update task
+PUT {{TodoListApi_HostAddress}}/api/tasks/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "Finish controller",
+  "summary": "Complete all CRUD endpoints for the task API.",
+  "category": 4,
+  "dueDate": "2026-10-06",
+  "priority": 10,
+  "isCompleted": true
+}
+
+### Delete task
+DELETE {{TodoListApi_HostAddress}}/api/tasks/1
+
