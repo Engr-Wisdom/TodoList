@@ -13,7 +13,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddHttpClient("TodoApi", client =>
 {
-    var apiUrl = builder.Configuration["TodoApi:BaseUrl"]
+    var apiUrl = Environment.GetEnvironmentVariable("TodoApi__BaseUrl")
         ?? "http://localhost:5052/";
 
     client.BaseAddress = new Uri(apiUrl);
